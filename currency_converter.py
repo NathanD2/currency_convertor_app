@@ -13,6 +13,9 @@ class App:
         print(countries)
         print(len(countries))
 
+        # Store country currency rate data
+        self.currency_data = currency_data
+
         # App root/master.
         self.root = tk.Tk()
         # App canvas.
@@ -80,41 +83,63 @@ class App:
 
     def select_country_1(self, selection):
         self.country_1 = selection
-        print("Country 1: " + self.country_1)
+        # print("Country 1: " + self.country_1)
         return
 
     def select_country_2(self, selection):
         self.country_2 = selection
-        print("Country 2: " + self.country_2)
+        # print("Country 2: " + self.country_2)
         return
 
     def convert(self):
         both_amounts_valid = True
+        countries_valid = True
 
         print("Entry 1 : " + self.get_entry_1())
         print("Entry 2 : " + self.get_entry_2())
         # Changes status message text
         try:
-            amount_1 = int(self.get_entry_1())
+            amount_1 = float(self.get_entry_1())
             self.status_1['text'] = ""
         except ValueError:
             print("Amount 1 is NAN")
-            self.status_1['text'] = "Not a valid number"
+            self.status_1['text'] = "- Not a valid number"
             both_amounts_valid = False
 
         try:
-            amount_2 = int(self.get_entry_2())
+            amount_2 = float(self.get_entry_2())
             self.status_2['text'] = ""
         except ValueError:
             print("Amount 2 is NAN")
-            self.status_2['text'] = "Not a valid number"
+            self.status_2['text'] = "- Not a valid number"
             both_amounts_valid = False
 
-        if not both_amounts_valid:
+        if both_amounts_valid is False:
+            print("Amounts not valid")
+            # return
+
+        # Retrieve user selected countries from OptionMenu.
+        print("Attempt to retrieve country selection")
+        print(self.variable_1.get())
+        print(self.variable_2.get())
+
+        if self.variable_1.get() == "Select Country":
+            self.status_1['text'] += "\n- Select a country"
+            countries_valid = False
+
+        if self.variable_2.get() == "Select Country":
+            self.status_2['text'] += "\n- Select a country"
+            countries_valid = False
+
+        if countries_valid is False:
             return
 
-        print(self.country_1)
-        print(self.country_2)
+        # Continue if all fields are valid to convert currency
+        currency_rate_1 = self.currency_data['rates'][self.variable_1.get()]
+        currency_rate_2 = self.currency_data['rates'][self.variable_2.get()]
+        print(currency_rate_1)
+        print(currency_rate_2)
+
 
 
 def fetch_api_data(url):
