@@ -49,6 +49,7 @@ class App:
         # Input boxes
         self.e1 = tk.Entry(self.frame_main)
         self.e2 = tk.Entry(self.frame_main)
+        self.e2.config(state="disabled")
         self.e1.grid(row=1, column=0)
         self.e2.grid(row=1, column=2)
 
@@ -61,8 +62,8 @@ class App:
         self.country_2 = None
 
         # Status messages
-        self.status_1 = tk.Label(self.frame_main, text="placeholder", font=("Helvetica", 15))
-        self.status_2 = tk.Label(self.frame_main, text="placeholder", font=("Helvetica", 15))
+        self.status_1 = tk.Label(self.frame_main, text="", font=("Helvetica", 15))
+        self.status_2 = tk.Label(self.frame_main, text="", font=("Helvetica", 15))
         self.status_1.grid(row=2, column=0, padx=50)
         self.status_2.grid(row=2, column=2, padx=50)
 
@@ -96,7 +97,7 @@ class App:
         countries_valid = True
 
         print("Entry 1 : " + self.get_entry_1())
-        print("Entry 2 : " + self.get_entry_2())
+        # print("Entry 2 : " + self.get_entry_2())
         # Changes status message text
         try:
             amount_1 = float(self.get_entry_1())
@@ -106,17 +107,13 @@ class App:
             self.status_1['text'] = "- Not a valid number"
             both_amounts_valid = False
 
-        try:
-            amount_2 = float(self.get_entry_2())
-            self.status_2['text'] = ""
-        except ValueError:
-            print("Amount 2 is NAN")
-            self.status_2['text'] = "- Not a valid number"
-            both_amounts_valid = False
-
-        if both_amounts_valid is False:
-            print("Amounts not valid")
-            # return
+        # try:
+        #     amount_2 = float(self.get_entry_2())
+        #     self.status_2['text'] = ""
+        # except ValueError:
+        #     print("Amount 2 is NAN")
+        #     self.status_2['text'] = "- Not a valid number"
+        #     both_amounts_valid = False
 
         # Retrieve user selected countries from OptionMenu.
         print("Attempt to retrieve country selection")
@@ -139,6 +136,20 @@ class App:
         currency_rate_2 = self.currency_data['rates'][self.variable_2.get()]
         print(currency_rate_1)
         print(currency_rate_2)
+
+        result_sum = round(((float(self.get_entry_1()) / currency_rate_1) * currency_rate_2), 5)
+
+        # Changes entry 2 text.
+        self.e2.config(state="normal")
+        self.e2.delete(0, "end")
+        self.e2.insert(0, str(result_sum))
+        self.e2.config(state="disabled")
+
+        value_entry_1 = round(float(self.get_entry_1()), 2)
+        self.e1.delete(0, "end")
+        self.e1.insert(0, str(value_entry_1))
+
+        return
 
 
 
